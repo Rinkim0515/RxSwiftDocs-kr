@@ -1,6 +1,14 @@
 # ReactiveX/ RxSwift Docs
 > RxSwift 학습자를 위해서 공식문서를 한글번역 + ( 부가설명을 추가) 했습니다.
 > 공식문서 링크: [바로가기](https://github.com/ReactiveX/RxSwift/blob/main/Documentation/GettingStarted.md) 
+
+## 작성완성 방법
+### chatGPT
+> 일단 영어원문을 번역해달라고 chatGPT 를 이용해서 번역을 돌리고 난후 부족한 설명이나 이해가 안가는 부분에대해서 찾아보고 정리하는 식으로 작성하였습니다. 
+
+> 학습방식은 초반에는 복붙 을 이용해서 필요한 내용만 요약하는 형식으로 가져갔는데 다시 봐야하는 케이스가 빈번헤졌습니다( 집중도 이슈)
+> 추후에는 영어 원문 및 코드 한글 번역본을 직접 키보드 타이핑으로 입력하는것으로 가져갔는데 직접 입력하는 방식이 이해가 잘되더군요?
+
 ## Getting Started 
 
 

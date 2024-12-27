@@ -7,4 +7,10 @@
 ```
 public protocol Collection<Element>: Sequence {}
 ```
+> sequence는 요소들을 순차적으로 접근할수있는 데이터의 나열
+> **eg) Range, AnyIterator, stride**
+
+
+
+ㅁㄴㅇ
 

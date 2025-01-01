@@ -108,42 +108,40 @@ Some sequences are finite while others are infinite, like a sequence of button t
 ---tap-tap-------tap--->
 ```
 
-These are called marble diagrams. There are more marble diagrams at [rxmarbles.com](http://rxmarbles.com).
 
-If we were to specify sequence grammar as a regular expression it would look like:
+이것들은 마블다이어그램이라고 불리우며 더많은 마블다이어 그램은 [여기서](http://rxmarbles.com) 확인할수 있습니다.
 
-**next\* (error | completed)?**
+1. **next** 
 
-This describes the following:
+- next는 **0회 이상 반복**을 의미합니다.  
+- next는 시퀀스가 요소를 방출할 때의 onNext **이벤트**를 의미합니다.  
+- 즉, 시퀀스는 **0번 또는 여러 번** 요소를 방출할 수 있다는 뜻입니다.  
+- next* 부분은 시퀀스가 **0번 또는 여러 번의** onNext **이벤트**를 방출할 수 있음을 나타냅니다.  
+- 예: 요소가 없을 수도 있고, 10개 이상 방출할 수도 있습니다.
 
-* **Sequences can have 0 or more elements.**
+<br/>
 
-* **Once an `error` or `completed` event is received, the sequence cannot produce any other element.**
+2. **(error | completed)?**
 
-Sequences in Rx are described by a push interface (aka callback).
+- | 는 **“또는”을 의미합니다.  
+- error는 onError **이벤트**로, 시퀀스가 에러로 종료되었음을 나타냅니다.  
+- completed는 onCompleted **이벤트**로, 시퀀스가 정상적으로 완료되었음을 나타냅니다.  
+- ?는 **0회 또는 1회만 발생**할 수 있음을 의미합니다.  
+- 즉, 시퀀스는 종료 이벤트로 onError **또는** onCompleted **중 하나만 발생할 수 있다**는 뜻입니다.  
 
+<br/>
 
+3. **(error | completed)?**
 
->[!NOTE]
-> 1. next  
->• *는 **0회 이상 반복**을 의미합니다.  
->• next는 시퀀스가 요소를 방출할 때의 onNext **이벤트**를 의미합니다.  
->• 즉, 시퀀스는 **0번 또는 여러 번** 요소를 방출할 수 있다는 뜻입니다.  
->• next* 부분은 시퀀스가 **0번 또는 여러 번의** onNext **이벤트**를 방출할 수 있음을 나타냅니다.  
->• 예: 요소가 없을 수도 있고, 10개 이상 방출할 수도 있습니다.  
->2. (error | completed)?  
->• |는 **“또는”을 의미합니다.  
->• error는 onError **이벤트**로, 시퀀스가 에러로 종료되었음을 나타냅니다.  
->• completed는 onCompleted **이벤트**로, 시퀀스가 정상적으로 완료되었음을 나타냅니다.  
->• ?는 **0회 또는 1회만 발생**할 수 있음을 의미합니다.  
->• 즉, 시퀀스는 종료 이벤트로 onError **또는** onCompleted **중 하나만 발생할 수 있다**는 뜻입니다.  
->• (error | completed)? 부분은 onError**나** onCompleted **이벤트가 발생하면 시퀀스가 종료**됨을 나타냅니다.  
->• 종료 이벤트가 발생한 후에는 더 이상 **다른 이벤트(onNext 포함)**를 방출할 수 없습니다.
->
->**1. 요소 없이 완료되는 시퀀스**  
->**2. 요소를 방출한 후 완료되는 시퀀스**  
->**3. 요소를 방출하다가 에러로 종료되는 시퀀스**  
->**4.요소 없이 에러로 종료되는 시퀀스**  
+- onError**나** onCompleted **이벤트가 발생하면 시퀀스가 종료**됨을 나타냅니다.  
+- 종료 이벤트가 발생한 후에는 더 이상 **다른 이벤트(onNext 포함)**를 방출할 수 없습니다.
+
+> [NOTE!]
+> 4가지의 Case
+> **1. 요소 없이 완료되는 시퀀스**  
+> **2. 요소를 방출한 후 완료되는 시퀀스**  
+> **3. 요소를 방출하다가 에러로 종료되는 시퀀스**  
+> **4.요소 없이 에러로 종료되는 시퀀스**  
 
 ```swift
 enum Event<Element>  {
@@ -161,15 +159,14 @@ protocol ObserverType {
 }
 ```
 
-**When a sequence sends the `completed` or `error` event all internal resources that compute sequence elements will be freed.**
+- 시퀀스가 completed 또는 error 이벤트를 보낼때, 시퀀스 요소를 계산하는데 사용된 모든 내부 리소스가 해제 됩니다.
+- 시퀀스 요소의 생성을 즉시 중단하고 리소스를 해제하려면 반환된 구독(subscription) 객체에서 dispose를 호출해야합니다.
+- 시퀀스가 유한한 시간내에 종료된다면, dispose 를 호출하지 않거나 dispose(by: disposeBag)를 사용하지 않아도 **영구적인 리소스 누수는 발생하지 않습니다. 하지만, 시퀀스가 요소생성을 완료하거나 에러를 반환하여 종료할때 까지 해당 리소스는 계속 사용됩니다.
 
-**To cancel production of sequence elements and free resources immediately, call `dispose` on the returned subscription.**
+- 시퀀스가 자체적으로 종료되지 않는 경우(예: 버튼 클릭 이벤트 시퀀스), dispose를 수동으로 호출하거나, DisposeBag 내부에서 자동으로 처리하거나, takeUntil 연산자를 사용하는 등의 방법으로 정리하지 않으면 리소스가 영구적으로 할당됩니다.
 
-If a sequence terminates in finite time, not calling `dispose` or not using `disposed(by: disposeBag)` won't cause any permanent resource leaks. However, those resources will be used until the sequence completes, either by finishing production of elements or returning an error.
+-  DisposeBag이나 takeUntil 연산자를 사용하는 것은 리소스를 정리하는 확실한 방법입니다. 유한 시간 내에 종료되는 시퀀스라 하더라도, 프로덕션 환경에서는 이러한 방법들을 사용하는 것이 권장됩니다.
+-  Swift의 Error 타입이 왜 제네릭이 아닌지 궁금하다면, [여기](#)에서 설명을 확인할 수 있습니다.
 
-If a sequence does not terminate on its own, such as with a series of button taps, resources will be allocated permanently unless `dispose` is called manually, automatically inside of a `disposeBag`, with the `takeUntil` operator, or in some other way.
 
-**Using dispose bags or `takeUntil` operator is a robust way of making sure resources are cleaned up. We recommend using them in production even if the sequences will terminate in finite time.**
-
-If you are curious why `Swift.Error` isn't generic, you can find the explanation [here](DesignRationale.md#why-error-type-isnt-generic).
 

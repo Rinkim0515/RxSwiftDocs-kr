@@ -136,14 +136,16 @@ Some sequences are finite while others are infinite, like a sequence of button t
 - onError**나** onCompleted **이벤트가 발생하면 시퀀스가 종료**됨을 나타냅니다.  
 - 종료 이벤트가 발생한 후에는 더 이상 **다른 이벤트(onNext 포함)**를 방출할 수 없습니다.
 
-> [NOTE!]
-> 4가지의 Case
+
+> [!NOTE]
+> **4가지의 Case**
+> 
 > **1. 요소 없이 완료되는 시퀀스**  
 > **2. 요소를 방출한 후 완료되는 시퀀스**  
 > **3. 요소를 방출하다가 에러로 종료되는 시퀀스**  
 > **4.요소 없이 에러로 종료되는 시퀀스**  
 
-```swift
+```swift+
 enum Event<Element>  {
     case next(Element)      // next element of a sequence
     case error(Swift.Error) // sequence failed with error

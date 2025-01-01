@@ -168,7 +168,7 @@ protocol ObserverType {
 - 시퀀스가 자체적으로 종료되지 않는 경우(예: 버튼 클릭 이벤트 시퀀스), dispose를 수동으로 호출하거나, DisposeBag 내부에서 자동으로 처리하거나, takeUntil 연산자를 사용하는 등의 방법으로 정리하지 않으면 리소스가 영구적으로 할당됩니다.
 
 -  DisposeBag이나 takeUntil 연산자를 사용하는 것은 리소스를 정리하는 확실한 방법입니다. 유한 시간 내에 종료되는 시퀀스라 하더라도, 프로덕션 환경에서는 이러한 방법들을 사용하는 것이 권장됩니다.
--  Swift의 Error 타입이 왜 제네릭이 아닌지 궁금하다면, [여기](#)에서 설명을 확인할 수 있습니다.
+-  Swift의 Error 타입이 왜 제네릭이 아닌지 궁금하다면, [여기](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Design%20Rationale.md#design-rationale-%EC%84%A4%EA%B3%84-%EC%B2%A0%ED%95%99)에서 설명을 확인할 수 있습니다.
 
 
 

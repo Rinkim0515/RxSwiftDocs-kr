@@ -24,7 +24,7 @@ public protocol Collection<Element>: Sequence {}
 ## Basics
 The [equivalence](MathBehindRx.md) of observer pattern (`Observable<Element>` sequence) and normal sequences (`Sequence`) is the most important thing to understand about Rx.
 <br/> <br/>
-- 시퀀스가\ 일반적인 Sequence\ (예: 배열 등)와\ 어떻게\ 유사한지를\ 이해하는 것이 \ 매우 중요합니다.
+- 시퀀스가 일반적인 Sequence (예: 배열 등)와 어떻게 유사한지를 이해하는 것이  매우 중요합니다.
 <br/>
 
 $\it{\large{\color{#5ad7b7}RxSwift에서 Observable <Element> 모든\ Observable\ 시퀀스는\ 단지\ 시퀀스입니다 }}$

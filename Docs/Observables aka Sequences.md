@@ -13,9 +13,10 @@ public protocol Collection<Element>: Sequence {}
  - collection은 sequence 프로토콜을 채택하고있는 모든 요소에 효율적으로 접근할수있는구조이며 특정인덱스 요소에 직접 접근이 가능하고, 항상정해진 모든 요소를 갖고있다
  - *eg) Array, Dictionary, Set*
 
-> 즉 컬렉션은 시퀀스를 채택하고 있기에 컬렉션인 배열또한 하나의 시퀀스 인것이다.
-> 이내용을 기반으로 Rxswift에서 observable 이라는 타입은 시퀀스라고 일컫는데
-> 이 데이터의 흐름이 순서대로 진행되기때문에 시퀀스로 간주되며 다른 시퀀스와의 차이점은 시간에 따라 비동기적으로 변화하는 시퀀스를 표현하는방식인 것 
+>[!NOTE]
+> 즉 컬렉션은 시퀀스를 채택하고 있기에 컬렉션인 배열또한 하나의 시퀀스 인것이다.  
+> 이내용을 기반으로 Rxswift에서 observable 이라는 타입은 시퀀스라고 일컫는데  
+> 이 데이터의 흐름이 순서대로 진행되기때문에 시퀀스로 간주되며 다른 시퀀스와의 차이점은 시간에 따라 비동기적으로 변화하는 시퀀스를 표현하는방식인 것  
 
 <br/> <br/> <br/>
 
@@ -52,7 +53,7 @@ $\it{\large{\color{#5ad7b7}RxSwift에서 Observable <Element> 모든\ Observable
 
 <br/>
 
-
+>[!NOTE]
 > 보통 observable은 어떤 event 를 emit 하고 나서 onNext,onCompleted,onError로 상태를 추적해서 관리하는것은  
 >
 > 개발자가 그것에대한 대응을 직접 핸들링 해야되는 resourceCost가 들지만  
@@ -67,7 +68,8 @@ $\it{\large{\color{#5ad7b7}RxSwift에서 Observable <Element> 모든\ Observable
 $\it{\large{\color{#5ad7b7}결론이 무엇이냐? }}$
 
  <br/>
- 
+
+>[!NOTE] 
 > 즉 opeartor를 사용하지 않고 직접 방출을 관리하게 되는 경우에는
 >
 > 데이터를 방출하는 시점마다  `onNext`, `onError`, `onCompleted` 상태를 직접 호출하여 방출해야하는것이고  상태가 변화할 때마다 그에 맞는 처리를 일일이 각 단계에서 직접 제어해야 한다.

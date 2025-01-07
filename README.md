@@ -2,6 +2,7 @@
 > RxSwift 학습자를 위해서 공식문서를 한글번역 + ( 부가설명을 추가) 했습니다.
 > 공식문서 링크: [바로가기](https://github.com/ReactiveX/RxSwift/blob/main/Documentation/GettingStarted.md) 
 
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FRinkim0515%2FRxSwift2025&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)                  
 ## 작성완성 방법
 ### chatGPT
 > 일단 영어원문을 번역해달라고 chatGPT 를 이용해서 번역을 돌리고 난후 부족한 설명이나 이해가 안가는 부분에대해서 찾아보고 정리하는 식으로 작성하였습니다. 

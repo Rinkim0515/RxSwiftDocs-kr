@@ -39,6 +39,10 @@
 > | **20.Driver** | 드라이버 |
 > | **21.Traits: Driver, Single, Maybe, Completable** |
 > | **22.Examples** | 예시 |
+---
+
+정리해야할 키워드 : Monad, iOS 스택/힙 의 실제 동작원리 (class, struct)
+
 
 ## ContactMe
 * 📱 +82 10.2412.7271

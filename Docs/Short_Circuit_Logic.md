@@ -1,4 +1,4 @@
-## Short - Circuit Logic
+# Short - Circuit Logic
 
 - short-circuit Logic은 논리연산에서 불필요한 계산을 건너뛰는 동작방식을 의미합니다.
 -  논리 연산이 이미 결과를 확정지었을때 , 나머지 연산을 수행하지 않고 종료하는 최적화 기법 입니다.
@@ -65,7 +65,7 @@ Error: Error Domain=TestError Code=1 "(null)"
 
 
 
-&&연산의 앞에 false가 와버린다면 2번째 조건은 검사를 안하고 false를 반환하기때문에 
+&&연산의 앞에 false가 와버린다면 2번째 조건은 검사를 안하고 false를 반환하기때문에   
 ||연산자앞에 true가 와버린다면 2번째 조건은 검사를 안하고 true를 반환하는 셈이다.
 
 

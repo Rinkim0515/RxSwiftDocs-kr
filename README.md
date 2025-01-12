@@ -36,8 +36,26 @@ Swift를 학습함에 있어서 반응형 프로그래밍은 언젠간 넘어야
 > 블로그에서 영문번역과 함께 확인하실수 있습니다. 
 
 
-## Getting Started 
+## Getting Started
+ 
+### 시작하기전 배경지식
+참고로 Swift에서 Protocol인 Sequence, Collection 이 있다.
+```
+public protocol Collection<Element>: Sequence {}
+```
 
+ - sequence는 요소들을 순차적으로 접근할수있는 데이터의 나열  
+ *eg) Range, AnyIterator, stride*
+
+ - collection은 sequence 프로토콜을 채택하고있는 모든 요소에 효율적으로 접근할수있는구조이며 특정인덱스 요소에 직접 접근이 가능하고, 항상정해진 모든 요소를 갖고있다
+ - *eg) Array, Dictionary, Set*
+
+>[!NOTE]
+> 즉 컬렉션은 시퀀스를 채택하고 있기에 컬렉션인 배열또한 하나의 시퀀스 인것이다.  
+> 이내용을 기반으로 Rxswift에서 observable 이라는 타입은 시퀀스라고 일컫는데  
+> 이 데이터의 흐름이 순서대로 진행되기때문에 시퀀스로 간주되며 다른 시퀀스와의 차이점은 시간에 따라 비동기적으로 변화하는 시퀀스를 표현하는방식인 것  
+
+<br/> <br/> <br/>
 
 ## 주요개념 및 목차 
 > | Chapter Subject |  | Keyword |

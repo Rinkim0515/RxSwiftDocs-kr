@@ -1,4 +1,4 @@
-## Playgrounds
+# Playgrounds
 
 RxSwift의 연산자(operators)가 정확히 어떻게 작동하는지 확실하지 않다면, Playgrounds에서 제공되는 작은 예제를 확인할 수 있습니다.
 

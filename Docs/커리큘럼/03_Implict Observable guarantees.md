@@ -1,4 +1,4 @@
-#  Implicit `Observable` guarantees (암묵적인 Observable 보장)
+# Implicit `Observable` guarantees (암묵적인 Observable 보장)
 
 모든 시퀀스 생성자(Observable)는 반드시 준수해야 하는 몇 가지 추가적인 보장이 있습니다.
 

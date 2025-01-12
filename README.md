@@ -49,12 +49,12 @@ Swift를 학습함에 있어서 반응형 프로그래밍은 언젠간 넘어야
 > | **[8.Custom operators](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Operator.md#custom-operators)** | ||
 > | **[9.Infallible](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Infallible.md#infallible)** | |
 > | **[10.Playgrounds](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Playgrounds.md#playgrounds)** | |
-> | **11.Error handling** |  | 에러핸들링 |
-> | **12.Debugging Compile Errors** | |
-> | **13.Debugging** | |디버깅 |
-> | **14.Enabling Debug Mode** | |
-> | **15.Debugging memory leaks** |   | |
-> | **16.KVO** | |||
+> | **[11.Error handling](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Error%20handling.md#error-handling)** |  | 에러핸들링 |
+> | **[12.Debugging Compile Errors](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Debugging%20Compile%20Errors.md#debugging-compile-errors)** | |
+> | **[13.Debugging](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/Debugging.md#debugging)** | |디버깅 |
+> | **[14.Enabling Debug Mode](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/14_Enabling%20Debug%20Mode.md#%EB%94%94%EB%B2%84%EA%B7%B8-%EB%AA%A8%EB%93%9C%EC%9D%98-%ED%99%9C%EC%84%B1%ED%99%94)** | |
+> | **[15.Debugging memoryleaks](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/14_Enabling%20Debug%20Mode.md#%EB%A9%94%EB%AA%A8%EB%A6%AC%EB%88%84%EC%88%98-%EB%94%94%EB%B2%84%EA%B9%85)** |   | |
+> | **[16.KVO](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/15_KVO.md#kvo)** | |||
 > | **17.UI layer tips** | |||
 > | **18.Making HTTP requests** ||
 > | **19.RxDataSources** | 

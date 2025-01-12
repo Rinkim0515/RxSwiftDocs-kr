@@ -32,7 +32,8 @@ $\it{\large{\color{#5ad7b7}RxSwift에서 Observable <Element> 모든\ Observable
 <br/>
 
 >[!NOTE]
-> 보통 observable은 어떤 event 를 emit 하고 나서 onNext,onCompleted,onError로 상태를 추적해서 관리하는것은  
+> 보통 observable은 어떤 event 를 emit 하고 나서  
+>  onNext,onCompleted,onError로 상태를 추적해서 관리하는것은  
 >
 > 개발자가 그것에대한 대응을 직접 핸들링 해야되는 resourceCost가 들지만  
 > *(상태의 명시적인 호출과, 상태를 계속 추적하며 그에따라 필요한 동작을 일일히 작성해야하는 resource cost )*  
@@ -52,7 +53,7 @@ $\it{\large{\color{#5ad7b7}결론이 무엇이냐? }}$
 >
 > 데이터를 방출하는 시점마다  `onNext`, `onError`, `onCompleted` 상태를 직접 호출하여 방출해야하는것이고  상태가 변화할 때마다 그에 맞는 처리를 일일이 각 단계에서 직접 제어해야 한다.
 >
-> 허나 연산자를 사용하게 될경우
+> **허나 연산자를 사용하게 될경우**
 >
 > 중간단계에서 상태관리를 자동화 할수 있어서 각 연산자가 자동으로 데이터를 전달하고 오류, 완료 상태를 다음 연산자로 넘기기 때문에,  
 > 매번 방출을 직접 관리할 필요가 없고 최종 subscribe에서만 최종 데이터와 상태(onNext, onError, onCompleted)를 구독하여 한 번만 처리해주면 된다는게 이말의 요지이다.
@@ -66,23 +67,25 @@ Rx를 사용하지 않은 비동기시스템을 구현하게 될경우에 상태
 허나 RxSwift를 사용함으로써  상태를 직접 관리하지 않고 이벤트 스트림으로 추상화 해서 사용한다는것이 포인트이고 흐름으로 표현되기에 전환과정이 명확하게 드러난다. 
 
 
+<br/>
 
 
+### 스트림의 흐름
 
-Here is a sequence of numbers: **정상적으로 종료**
+> 여기 숫자로 구성된 시퀀스 있습니다. ( **정상적으로 종료** )
 
 
 ```
 --1--2--3--4--5--6--| // terminates normally
 ```
 
-Another sequence, with characters: **오류로 종료**
+>문자로  구성된 다른  시퀀스도  있습니다. ( **오류로 종료** )
 
 ```
 --a--b--a--a--a---d---X // terminates with error
 ```
 
-Some sequences are finite while others are infinite, like a sequence of button taps: 무한히 지속
+> 어떤 시퀀스들은 유한하고 다른 시퀀스는  무한합니다. 예를 들어 버튼을 누르는것처럼요 (**무한히 지속** )
 
 ```
 ---tap-tap-------tap--->

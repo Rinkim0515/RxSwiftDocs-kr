@@ -1,6 +1,6 @@
 
 # 시작하기에 앞서 
-
+// dd
 ## 배경지식
 참고로 Swift에서 Protocol인 Sequence, Collection 이 있다.
 ```

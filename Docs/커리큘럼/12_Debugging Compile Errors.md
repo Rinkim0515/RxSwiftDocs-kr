@@ -1,4 +1,4 @@
-# Debugging Compile Errors
+# 컴파일 에러를 디버깅하기
 
 - RxSwift/RxCocoa 코드를 작성할때, 컴파일러가 Observable의 타입을 유추하도록 크게 의존하게 됩니다. 이는 Swift가 멋진이유중 하나이지만, 때론 좌절감을 줄수도 있습니다. 
 > (아마 타입 추론과 연관된 얘기인듯? )

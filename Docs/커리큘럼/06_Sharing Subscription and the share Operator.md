@@ -1,4 +1,4 @@
-# Sharing Subscription and the share Operator
+# 구독(Subscription) 공유와 share 연산자
 만약 여러 Observer가 하나의 구독에서 생성된이벤트(요소) 를 공유하도록 만들고 싶다면 어떻게 해야할까요? 
 
 이를 위해선 두가지를 정의 해야 합니다.

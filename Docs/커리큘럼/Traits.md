@@ -176,3 +176,60 @@ single.subscribe(onSucess: { value in
 - API요청 및 단일 결과를 다루는 작업에서 용이합니다.
 
 ### Completable
+
+Completable은 Observable 의 변형으로 , 완료 이벤트 또는 오류만 방출할수 있습니다.
+요소를 방출하지 않는것이 보장됩니다.
+- 요소를 방출하지 않음
+- 완료 이벤트 또는 오류를 방출.
+- 부작용을 공유하지 않음.
+
+Completable은 작업의 완료 여부만 중요하고, 그완료로 인해 생성된 요소에는 관심이 없는경우에 유용합니다.  
+이것은 요소를 방출하지않는 `Observable<Void>` 와 비슷합니다.
+
+##### Creating a Completable
+
+completable을 생성하는 방식은 Observable을 생성하는 방식과 유사합니다.
+아래는 간단한 예제 입니다:
+```swift
+func cacheLocally() -> Completable {
+	return Completable.create { completable in 
+	// Store some data locally
+	---
+	---
+	
+	guard success else {
+		completable(.error(CacheError.failedCaching))
+		return Disposable.create {}
+	}
+	
+	completable(.completed)
+	return Disposable.create {}
+	}
+}
+```
+생성한 Completable을 다음과 같이 사용할수 있습니다.
+```swift
+cacheLocally()
+	.subscribe { completable in 
+		switch completable {
+			case .completed:
+				print("Completed with no error")
+            case .error(let error):
+                print("Completed with an error: \(error.localizedDescription)")
+		}
+	}
+	.disposed(by: disposeBag)
+```
+
+구독(Subscribe)과정에서 CompletableEvent 열거형이 제공됩니다.
+- `.completed`: 작업이 완료되었음을 나타냄 
+- `.error` : 작업중 오류가 발생했음을 나타냄
+
+이후에는 더이상 이벤트를 발생하지 않습니다.
+
+요약: 
+요소 방출이 없으며 작업의 실패/성공 여부만 중요, 작업결과는 무관합니다.
+데이터 저장, 파일업로드 ,로그작성과 같은 작업에서 작업의 완료 여부만 필요할때 유용합니다.
+
+작업 결과가 아닌 상태를 확인하려는 경우, Completable이 적합한 선택입니다.
+데이터 저장, 네트워크 작업 등 “완료 여부만 확인”할 필요가 있는 작업에서 유용합니다.

@@ -233,3 +233,82 @@ cacheLocally()
 
 작업 결과가 아닌 상태를 확인하려는 경우, Completable이 적합한 선택입니다.
 데이터 저장, 네트워크 작업 등 “완료 여부만 확인”할 필요가 있는 작업에서 유용합니다.
+
+### Maybe
+
+Maybe 는 Single과 Completable의 중간형태의 Observable입니다.
+하나의 요소를 방출하거나, 요소없이 완료되거나, 오류를 방출할수 있습니다.
+
+주의: 이러한 이벤트중 하나라도 발생하면 Maybe는 종료됩니다.
+- 예를들어, 완료된 Maybe는 요소를 방출할수없으며, **요소를 방출한 Maybe는 완료 이벤트를 보낼수 없습니다.** 
+
+- 완료 이벤트, 단일 요소, 또는 오류 중 하나를 방출.
+- 부작용을 공유하지 않음
+  
+Maybe는 요소를 방출할수도 있고, 방출하지 않을수더 있는 작업을 모델링하는데 적합합니다.
+
+
+Maybe와 Single 은 비슷해 보이지만, 동작과 의도에서 중요한 차이점이 존재.
+
+Single은 항상 결과 또는 오류중 하나를 방출해야하는 작업
+Maybe는 결과가 없을수도 있는 작업을 표현  값이 없이 완료될수도 있음 
+
+
+#### Creating a Maybe
+
+Maybe를 만들어서 사용하는것은 Observable과 유사함
+아주 간단한 예제를 보자면 :
+```swift
+func generateString() -> Maybe<String> {
+	return Maybe<String>.create { maybe in 
+		maybe(.success("RxSwift"))
+		
+		// OR
+		
+		maybe(.completed)
+		
+		// OR
+		
+		maybe(.error(error))
+		
+		return Disposable.create {}
+	}
+
+}
+```
+그리고 이런식으로 사용 하면됨:
+
+```swift
+generateString()
+	.subscribe { maybe in 
+		switch maybe {
+			case .sucess(let element):
+				print("Completed with element \(element)")
+			case .completed:
+				print("Completed with no element")
+			case .error(let error):
+				print("Completed with an error \(error.localizedDescription)")
+		}
+	}
+	.disposed(by: disposeBag)
+```
+혹은 `subscribe`를 사용해서 이렇게 쓸수도 있음
+```swift
+generateString()
+	.subscribe(onSuccess: {elements in 
+					print("Completed with element \(element)")
+               },
+               onError: { error in
+		            print("Completed with an error \(error.localizedDescription)")
+               },
+               onCompleted: {
+	                print("Completed with no element")
+               })
+    .disposed(by: disposeBag)
+```
+이것 역시 `.asMaybe()` 를 사용해서 Observable 시퀀스를 Maybe타입으로 변형시키는것이 가능함.
+
+
+## RxCocoa traits
+
+### Driver

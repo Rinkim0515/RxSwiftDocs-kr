@@ -312,3 +312,200 @@ generateString()
 ## RxCocoa traits
 
 ### Driver
+`Driver`는 가정 정교한 Traits 중 하나로, RxCocoa에서  UI계층에서 리액티브 코드를 작성하거나, 애플리케이션의 동작을 구동하는 데이터 스트림을 모델링하려는 경우 에 적합합니다. ( 기본적으로 UI를 안정적이고 안전하게 구동하기 위한 목적으로 만들어 졌습니다. )
+
+
+**Driver의 특성:**
+1. 에러가 발생하지 않음: Driver는 에러를 방출하지 않는 시퀀스를 보장합니다.  (UI가 비정상적으로 중단되지 않습니다.)
+2. MainScheduler에서 관찰: UI 는 주로 메인스레드에서 실행되므로 Driver는 항상 메인스케쥴러에서 관찰됨.( UI 작업은 반드시 메인스레드에서 실행되어야하며, Driver는 이규칙을 강제함)
+3. 사이드 이펙트 공유: `shrare(replay:1, scope: .whileConnected)`를 통해서 사이드 이펙트를 공유합니다. (여러 UI요소 에서 같은 데이터를 사용할때 ,Driver는 데이터를 한번만 생성하고 이를 공유합니다.)
+
+
+예시
+- CoreData  모델로부터 UI를 구동하기
+- UI 요소 간의 값을 기반으로 UI를 구동하기
+
+운영체제 드라이버 처럼, 시퀀스에서 에러가 발생하면 애플리케이션이 사용자입력에 응답하지 않을수 있습니다.
+또한, UI요소와 애플리케이션 로직은 일반적으로 스레드에 안전하지 않으므로, 메인스레드에서 요소를 관찰하는것이 매우 중요합니다. 
+
+
+##### 전형적인 초보자용 예제
+RxSwift를 배우는 과정에서 흔히 접하는 예제 입니다. 이코드는  UI입력을 처리하고 데이터를 가져와 화면에 표시 하는 기본적인 RxSwift 패턴을 보여줍니다.
+
+```swift
+let results = query.rx.text
+	.throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+	.flatMapLatest { query in 
+		fetchAutoCompleteItems(query)
+	}
+```
+
+`query.rx.text`는 사용자의 입력을 관찰합니다.
+-  .throttle(.milliseconds(300), scheduler: MainScheduler.instance)는 사용자의 입력을 **300밀리초 간격**으로 제한합니다(과도한 요청 방지).
+-  .flatMapLatest { query in fetchAutoCompleteItems(query) }는 최신 검색어만 서버에 요청합니다.
+
+
+```swift
+results
+	.map { "\($0.count)" }
+	.bind(to: resultCount.rx.text)
+	.disposed(by: disposeBag)
+
+results
+    .bind(to: resultsTableView.rx.items(cellIdentifier: "Cell")) { (_, result, cell) in
+        cell.textLabel?.text = "\(result)"
+    }
+    .disposed(by: disposeBag)
+
+```
+
+> 이 코드의 의도된 동작은 다음과 같습니다:
+1. 사용자 입력을 **제한(throttle)** 한다.
+2. **서버에 요청을 보내** 자동완성 결과 목록을 가져온다. (쿼리당 한 번)
+3. 결과를 **두 개의 UI 요소에 바인딩**한다.
+
+- 결과 리스트를 표시하는 UITableView
+- 결과 개수를 표시하는 UILabel
+
+> 그렇다면, 이코드의 문제점은 무엇일까요?
+1. fetchAutoCompleteItems 옵저버블 시퀀스에서 오류(예: 네트워크 연결 실패 또는 파싱 오류) 가 발생하면, UI 바인딩이 해제되며, 이후 새로운 검색어 입력에 반응하지 않게됨.
+2. fetchAutoCompleteItems가 백그라운드 스레드에서 결과를 반환하는 경우, UI요소가 백그라운드 스레드에서 업데이트 될수 있으며, 이로인해 예측할수 없는 충돌(non-deterministic crash)이 발생할수 있음.
+3. 결과가 두개의 UI요소에 바인딩 되어 있기때문에, 각UI 요소마다 별도로HTTP 요청이 발새하여, 한번의 입력에 대해 두개의 네트워크 요청이 수행됨 -> 의도한 동작이 아님
+
+
+> 보다 적절한 코드버전은 다음과 같습니다.
+
+``` swift
+let results = query.rx.text
+	.throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+	.flatMapLatest { query in 
+		fetchAutoCompleteItems(query)
+			.observeOn(MainScheduler.instance)
+			.catchErrorJustReturn([])
+	}
+
+results
+	.map { "\($0.count)" }
+	.bind(to:resultCount.rx.text)
+	.disposed(by: disposeBag)
+
+results
+	.bind(to: resultsTableView.rx.items(cellIndentifier: "Cell")) { _, result. cell in cell.textLabel?.text = "\(result)"
+	}
+	.disposed(by: disposeBag)
+```
+
+기존의 문제점를 해결하기 위해 몇가지 추가적인 Rxswift 연산자를 활용합니다.
+`observeOn(MainScheduler.instance)` 를 사용하여 네트워크 요청이 백그라운드 스레드에서 실행되더라도 그것에대한 결과는 항상 메인스레드에서 처리하도록 강제합니다.
+`catchErrorJustReturn([])`을 통해서 네트워크 오류나 데이터 파싱오류로 인해 실패하면 빈배열을 반환함으로써  UI응답이 멈추는것을 방지합니다. 
+`share(replay: 1)` 을 통해서 HTTP요청을 중복으로 발생하는것을 방지하고 가장최신의 결과를 모든 UI요소가 재사용할수 있습니다. 즉 `UILabel` 과 `UITableView`에 각각 새로운 HTTP 요청을 보내는것이 아니라 하나의 요청결과를 공유하게 됩니다.
+
+이러한 요구 사항을 대규모 시스템에서 올바르게 처리하는것은 어려울수 있습니다.
+그러나 Compiler와 RxSwift의 Traits를 사용하면 더간단한 방식으로 이를 증명할수 있습니다.
+
+
+
+> 다음 코드는 거의 동일합겁니다. Trait의 사용 
+
+``` swift
+let results = query.rx.text.asDriver()
+	.throttle(.milliseconds(300), scheduler: MainScheduler.instance)
+	.flatMapLatest { query in 
+		fetchAutoCompleteItems(query)
+			.asDriver(onErrorJustReturn: [])
+		}
+results
+	.map { "\($0.count)" }
+	.drive(resultCount.rx.text)
+	.diposed(by: disposeBag)
+
+results
+	.drive(resultTableView.rx.items(cellIdentifier: "Cell")) {_, results, cell in
+		cell.textLabel?.text = "\(result)"
+	}
+	.disposed(by: disposeBag)
+```
+
+> 이코드의 핵심변화는 `asDriver()`를 사용하여 Driver Traits 을 적용한것입니다.
+```
+query.rx.text.asDriver()
+```
+- `query.rx.text.asDriver()` 에서 `quert.rx.text` 는 ControlProperty (즉, UI요소의 값변화 스트림) 인데 이를 Driver로 변환하고
+
+```
+.asDriver(onErrorJustReturn:[])
+```
+- `.asDriver(onErrorJustReturn[])` 네트워크 요청이 실패하면 빈 배열 을 반환하여 UI . 가멈추는 문제를 방지하였습니다. 
+
+Driver는 기본적으로 메인스레드에서 실행되고 UI와 안정적으로 연동되도록 설계되었으며
+에러를 발생시키지 않도록 설계되어있어서 Observable이 Driver로 변환될때 반드시 에러처리방식을 지정해야합니다.
+
+기존의 `.bind(to:)`가 `.drive()`로 바뀌었다는 것
+`.drive()`는 **RxSwift의** Driver **트레잇을 사용해야만 호출할 수 있는 메서드**입니다.
+`drive()`가 사용 가능하다는 것은 **해당 옵저버블이** Driver **속성을 만족**한다는 의미입니다.
+
+> **기존 코드와 비교하면** Driver**를 사용하여 UI 업데이트 안정성을 보장할 수 있도록 개선됨.**
+
+
+이 3가지 속성이 **UI 업데이트에 최적화된 RxSwift의** Driver**가 가진 가장 중요한 특성**입니다.
+
+• **에러를 허용하지 않음** → UI가 멈추는 문제 방지
+
+• **메인 스레드에서 실행** → UI 충돌 및 백그라운드 업데이트 방지
+
+• **결과를 공유** → 중복 네트워크 요청 방지
+
+
+> 어떻게 Driver의 속성이 보장될까요? 
+
+그냥 일반적인 RxSwift 연산자를 사용하면 됩니다.
+사실 `asDriver(onErrorKustReturn:[])` 는 아래 코드와 동일한 동작을 합니다. 
+즉 ,Driver는 기존의 옵저버블을 변환하여 안정적인 UI  업데이트가 가능하도록 보장되는 래퍼(Wrapper) 입니다.
+
+```
+let safeSequence = xs
+	.observeOn(MainScheduler.instance)
+	.cathErrorJustReturn(onErrorJustReturn)
+	.share(replay:1, scope: .whileConnected)
+return Driver(raw: safeSequence)
+```
+> `asDriver(onErrorJustReturn: [])`**는 위 코드의 축약형이며, 이 변환 과정을 자동으로 처리하는 역할**을 합니다.
+
+
+
+마지막 중요한 차이점은 `bind(to:)` 대신 `drive()`를 사용하는 것입니다.
+drive()는 Driver 트레잇에서만 정의되어 있습니다.
+
+> 즉, 코드에서 drive()가 사용되고 있다면, 그 Observable은 절대 에러를 발생시키지 않으며, 항상 메인 스레드에서 실행됨을 의미합니다
+따라서 UI 요소에 안전하게 바인딩할 수 있습니다.
+
+
+하지만 이론적으로 누군가 ObservableType 또는 다른 인터페이스에서
+drive 메서드를 정의할 수도 있습니다.
+
+따라서 **완벽하게 안전성을 보장하려면**,바인딩 전에 `let results: Driver<[Results]> = ...` 와 같이
+**임시로** Driver **타입을 명시적으로 선언하는 것이 필요할 수도 있습니다.**
+
+다만, 이것이 현실적으로 필요한지는 독자의 판단에 맡기겠습니다.
+
+일반적으로 drive()는 Driver에서만 사용할 수 있지만,  
+ 만약 누군가 **다른** ObservableType**에서도** drive()**를 정의해버리면**?  그 경우에는 Driver의 속성이 완벽하게 보장되지 않을 수도 있습니다.
+
+
+
+> 기존의 Observable을 사용할 경우
+
+- `observeOn(MainScheduler.instance)`
+- `catchErrorJustReturn([])`
+- `share(replay: 1, scope: .whileConnected)`
+- `bind(to:)`
+
+위와 같은 처리를 직접 해야 하지만,
+
+  
+
+> Driver를 사용하면 **자동으로** 이 모든 것이 보장
+
+- drive()를 사용하면 **에러 발생 X 
+- UI 스레드에서 실행 보장**
+- UI와 연동되는 RxSwift 코드에서는 **가능하면** Driver**를 사용하는 것이 권장됨**

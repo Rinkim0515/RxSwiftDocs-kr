@@ -509,3 +509,174 @@ drive 메서드를 정의할 수도 있습니다.
 - drive()를 사용하면 **에러 발생 X 
 - UI 스레드에서 실행 보장**
 - UI와 연동되는 RxSwift 코드에서는 **가능하면** Driver**를 사용하는 것이 권장됨**
+
+### `Signal`
+
+`Signal` 은 `Driver` 와 유사하지만 한가지 차이점이 있습니다.
+`Driver`는 새로운 구독자가 생길때마다 가장 최근 이벤트를 다시 전달하지만, `Signal`은 새 구독자에게 아무 이벤트도 재생하지않습니다.
+
+- 대신 `Signal`은 이벤트가 발생할때만 데이터를 전파하고, 이벤트 발생전에는 값을 저장하지 않습니다.
+- `Signal`은 버튼 클릭, 알림(Notification), UI이벤트 처리 등에 적합한 구조를 제공합니다.
+
+즉 Singal은 이벤트 기반의 UI동작을 RxSwift로 다룰때 적합한 개념입니다.
+
+`Signal`은 Application에서 명령형 이벤트(Imperative Events)를 반응형 방식(Reactively)으로 모델링하는 
+빌더패턴으로 볼수 있습니다.
+
+`Signal`의 특징:
+- 이벤트를 항상 메인스레드에서 전달한다.
+- 구독자들은 데이터 스트림을 공유한다(`share(scope: .whileConnected)`)
+- 구독자가 추가 되어도 이전 이벤트를 전달하지 않는다.
+
+
+즉 `Signal`은 UI 이벤트를 RxSwift방식으로 처리하는 최적의 Trait 이고 
+`Driver`는 UI 상태를 유지하는 경우 사용하지만, `Signal`은 상태를 유지하지 않고 즉시 처리해야하는 이벤트를 다룰때 적합하다. 
+
+
+## ControlProperty/ ControlEvent
+
+### ControlProperty
+
+`ControlProperty`는 UI 요소의 속성을 나타 내는  `Observable / Observable Type` 을 위한 트레잇 입니다.
+
+`ControlProperty`는 RxSwift에서 UI요소의 속성을 반응형으로 다룰때 사용되는 특수한 옵저버블이고 
+`UITextfield`의 `text` 속성이나 `UISwitch`의 `isOn` 속성을 RxSwift 방식으로 감지하려면 `ControlProperty`를 사용한다.
+
+즉 UI요소의 state를 옵저버블 형태로 변환하여 반응형 프로그래밍을 가능하게 한다. 
+
+값의 시퀀스는 초기 UI 값과 사용자가 변경한 값만을 나타냅니다. 
+코드에서 직접 값이 변경된경우 (setValue 같은 프로그래밍적 변경), 이를 감지할수 없습니다
+- 사용자의 입력변화만을 감지하고, 코드로 변경된값은 감지하지않음
+
+
+`ControlProperty`의 주요 속성 
+- `share(replay: 1)` 동작을 가진다
+- 상태를 유지하며(stateful), 구독시 마지막 값을 즉시 다시전달한다.
+- UI요소가 해제 될때( 메모리에서 제거. 될때) 자동으로 완료 된다. (따라서 **메모리 관리를 위한 별도의** disposeBag **처리가 필요 없음**.)
+- 절대 에러를 발생시키지 않는다.
+- 항상 MainScheduler.instance에서 이벤트를 전달한다. 
+
+ControlProperty는 UI 요소의 속성을 다루므로, **이벤트 처리는 항상 메인 스레드에서 실행되어야 함**.
+
+-  따라서 내부적으로 subscribeOn(ConcurrentMainScheduler.instance)**를 사용하여 메인 스레드에서 실행을 강제**.
+**이로 인해 UI 관련 이벤트 처리 시 스레드 관리 문제가 발생하지 않음**
+
+즉, ControlProperty는 UI 요소를 반응형으로 다룰 때 최적의 선택이고 
+이러한 주요특징을 가진다:
+-  UI 속성 변화를 옵저버블로 변환
+-  사용자의 입력 변화만 감지 (코드로 변경된 값은 감지 X)
+-  구독 시 마지막 값을 즉시 제공 (stateful)
+-  UI 요소가 해제되면 자동으로 완료 (complete)
+-  항상 메인 스레드에서 실행되어 UI 업데이트가 안전함
+ ControlProperty는 RxSwift에서 UITextField, UISwitch, UISlider 등의 UI 속성을 Rx 방식으로 감지하고 다룰 때 반드시 사용해야 하는 핵심 요소
+
+
+ ### Practical usage example
+
+ UISearchBar+Rx 및 UISegmentedControl+Rx에서 매우 유용한 실용적인 예제를 찾을 수 있습니다.
+
+ > `UISearchBar` 의 예제
+ ```swift
+ extension Reactive where Base: UISearchBar {
+
+	public var value: ControlProperty<String?> {
+		let source: Observable<String?> = Observable.deferred { [weak searchBar = self.base as UISearchBar] () -> Observable<String?> in 
+			let text = searchBar?.text 
+		
+			return  (searchBar?.rx.delegate.methodInvoked(#selector(UISerachBarDelegate.searchBar(_:textDidChange:))) ?? Observable.empty())
+			.map { a in 
+				return a[1] as? String
+			}
+			.startWith(text)
+		}
+		let bindingObserver = Binder(self.base) { (searchBar, text: String?) in 
+		searchBar.text = text
+		}
+		return ControlProperty(values: source, valueSink: bindingObserver)
+	}
+}
+```
+> `UISegmentControl` 의 예시 
+```swift
+extension Reactive where Base: UISegmentedControl {
+	public var selectedSegmentIndex: ControlProperty<Int> {
+		value
+	}
+	
+	public var value: ControlProperty<Int> {
+		return UIControl.rx.value(
+			self.base,
+			getter: { segmentControl in 
+				segmentedControl.selectedSegmentIndex
+			}, setter: { segmentControl, value in 
+				segmentedControl.selectedSegmentIndex = value 
+			}
+		)
+	}
+}
+```
+
+
+### ControlEvent 
+
+`ControlEvent`는 UI요소에서 발생하는 이벤트를 나타내는 `Observable / ObservableType` 을 위한 Trait 입니다.
+
+버튼 클릭, 텍스트 입력, 스크롤 이벤트와 같은 UI이벤트를 RxSwift 방식으로 다루는 특수한 옵저버블입니다. 
+`ControlProperty`는 UI 요소의 속성을 감지하는 역할을 하지만, `ControlEvent`는 사용자가 발생시키는 이벤트를 감지하는 역할 
+
+즉 사용자의 입력 / 상호작용을 RxSwift 방식으로 처리할때 사용된다.
+
+`ControlEvent`의 주요 속성:
+- 구독시 초기값을 보내지 않는다.
+- UI 요소가 메모리 해제 될때 시퀀스가 Complete 된다. 
+- 절대 에러를 발생시키지 않는다.
+- 항상 MainScheduler.instance에서 이벤트를 전달한다.
+
+`ControlEvent`의 구현은 이벤트 시퀀스가 항상 메인 스레드에서 구독되도록 보장합니다.
+(`subscribeOn(ConcurrentMainScheduler.instance)` 동작을 따릅니다.)
+
+ `ControlEvent`를 사용하면 UI 이벤트가 백그라운드에서 실행되는 문제를 걱정할 필요가 없다!
+
+ 즉 UI 이벤트를 RxSwift에서 다룰 때 가장 적합한 트레잇!
+
+-  UI 이벤트(버튼 클릭, 텍스트 입력 등)를 반응형으로 처리할 수 있음.
+- 이전 값을 저장하지 않고 새로운 이벤트가 발생할 때만 값을 방출
+- UI 요소가 해제되면 자동으로 완료(**complete**)되므로 메모리 관리가 용이.
+- 항상 메인 스레드에서 실행되므로 UI 업데이트가 안전하게 이루어짐.
+
+#### Practical usage example
+
+이것은 ControlEvent를 사용할 수 있는 전형적인 사례입니다.
+
+> `UIViewController` 의사례
+```swift
+public extension Reactive where Base: UIViewController {
+	public var viewDidload: ControlEvent<Void> {
+		let source = self.methodInvoked(#selector(Base.viewDidLoad)).map { _ in}
+		return ControlEvent(events: source)
+	}
+}
+```
+-  UIViewController의 viewDidLoad()는 기본적으로 한 번 실행되는 라이프사이클 메서드입니다.
+-  이 코드는 viewDidLoad가 호출될 때마다 **RxSwift의** ControlEvent**를 통해 이벤트를 방출할 수 있도록 변환**합니다.
+- methodInvoked(#selector(Base.viewDidLoad))를 사용하여 viewDidLoad()가 호출될 때마다 옵저버블을 실행하도록 만듬.
+-  .map { _ in }을 사용하여 반환값을 Void로 변환 (이벤트가 발생했다는 사실만 전달).
+-  최종적으로 ControlEvent(events: source)를 반환하여 **RxSwift 방식으로** viewDidLoad**를 감지 가능**하게 함.
+
+>  `UICollectionView` 의 사례
+```swift
+extension Reactive where Base : UICollectionView {
+	public var itemSelected: ControlEvent<IndexPath> {
+		let source = delegate.methodInvoked(#selector(UICollectionViewDelegate.collectionView(_:didSelecItemAt:)))
+			.map { a in 
+				return a[1] as! IndexPath
+			}
+		return ControlEvent(events: soure)
+	}
+}
+```
+
+- UICollectionView의 **셀 선택 이벤트**(didSelectItemAt)를 **RxSwift 방식으로 감지할 수 있도록** ControlEvent**로 변환**한 코드입니다.
+- delegate.methodInvoked(#selector(UICollectionViewDelegate.collectionView(_ :didSelectItemAt:)))를 사용하여셀을 선택할 때 호출되는 델리게이트 메서드의 이벤트를 옵저버블로 변환.
+-  .map { a in a[1] as! IndexPath }을 사용하여 이벤트의 두 번째 파라미터(선택된 셀의 IndexPath)를 추출하여 변환**.
+- ControlEvent(events: source)를 반환하여 **Rx 방식으로 안전하게 셀 선택 이벤트를 감지 가능하게 만듦**.

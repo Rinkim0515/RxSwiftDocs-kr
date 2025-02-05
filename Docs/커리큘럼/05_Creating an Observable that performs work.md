@@ -1,8 +1,8 @@
-# 작업을 수행하는 Observable을 생성하기
+# 작업을 수행하는 Observable을 생성하기(Creating an Observable that performs work)
 
-이제 조금더 흥미로운 작업을 해보겠습니다. 이전 예제에서 사용된 interval 연산자를 직접 구현해보겠습니다.
+> 이제 조금더 흥미로운 작업을 해보겠습니다. 이전 예제에서 사용된 interval 연산자를 직접 구현해보겠습니다.
 
-```
+```swift
 func myInterval(_ interval: DispatchTimeInterval) -> Observable<Int> {
     return Observable.create { observer in
         print("Subscribed")
@@ -41,24 +41,25 @@ func myInterval(_ interval: DispatchTimeInterval) -> Observable<Int> {
     }
 }
 ```
-myInterval 함수는 지정된 간격동안 Observable이 데이터를 방출하는 비동기 반복작업을 구현함 
-이함수는 타이머 기반 반복작업으로써 Observable.create 를 통해서 정수를 방출하는 사용자 정의 Observable을 만들고 
+- myInterval 함수는 지정된 간격동안 Observable이 데이터를 방출하는 비동기 반복작업을 구현함 
+  
+- 이함수는 타이머 기반 반복작업으로써 Observable.create 를 통해서 정수를 방출하는 사용자 정의 Observable을 만들고 
 
-timer.schedule(deadline: DispatchTime.now() + interval, repeating: interval)
-현재 시간으로부터 interval 만큼 지연된 시점에서 시작하여, 지정된 간격으로 반복 실행됩니다.
+`timer.schedule(deadline: DispatchTime.now() + interval, repeating: interval)`
+- 현재 시간으로부터 interval 만큼 지연된 시점에서 시작하여, 지정된 간격으로 반복 실행됩니다.
 
 
 타이머가 실행될때마다 .next 이벤트를 통해서 현재 정수값을 Observer로 전달한후 정수값 ( next) 는 
 1씩 증가합니다. 
 
-cancel 을 통해서 Dispoables.create로 구독취소시에 타이머를 중단하고 리소스를 정리하며 
-cancel.isDisposed가 true일경우 더이상 값을 방출하지 않습니다. 
+`cancel` 을 통해서 `Dispoables.create`로 구독취소시에 타이머를 중단하고 리소스를 정리하며 
+`cancel.isDisposed`가 `true`일경우 더이상 값을 방출하지 않습니다. 
 
 
 - 100밀리 세컨드 = 0.1초 
 
 > 단일 구독에대한 예제
-```
+```swift
 let counter = myInterval(.milliseconds(100))
 
 print("Started ---")
@@ -75,7 +76,7 @@ subscription.dispose()
 print("Ended ----")
 ```
 
-이것은 이렇게 출력될것입니다.
+> 이것은 이렇게 출력될것입니다.
 ```
 Started ----
 Subscribed
@@ -87,6 +88,8 @@ Subscribed
 Disposed
 Ended ----
 ```
+</br>
+</br>
 
 > 순서, 실행되는스레드, 동작되는내용
 
@@ -99,10 +102,12 @@ Ended ----
 | 5   | subscription.dispose()           | 메인 스레드         | 구독 취소. 백그라운드 타이머 중단 및 리소스 정리.       |
 | 6   | print("Ended ---")               | 메인 스레드         | "Ended ---" 출력.                     |
 
+</br>
+</br>
 
-> 만약 이렇게 사용한다면  
-> 다중 구독에 대한 예제
-```
+> 만약 이렇게 사용한다면  **(다중 구독에 대한 예제)**
+
+```swift
 let counter = myInterval(.milliseconds(100))
 
 print("Started ----")
@@ -131,7 +136,7 @@ print("Disposed")
 
 print("Ended ----")
 ```
-이렇게 출력될것입니다.
+>이렇게 출력될것입니다.
 ```
 Started ----
 Subscribed
@@ -159,7 +164,7 @@ Ended ----
 여기서는 각 구독마다 새로운 타이머를 생성하므로, 각 구독은 서로 독립적으로 동작합니다.  
 
 각 구독은 별도의 타이머를 싱핼하고, 독립적으로 데이터를 방출함  
-Observable은 한번 생성된 상태를 공유하지만, 각 구독은 실행 컨텍스트를 독립적으로 가지고 Observable의 동작은 구독마다 독립적으로 실행된다. 
+`Observable`은 한번 생성된 상태를 공유하지만, 각 구독은 실행 컨텍스트를 독립적으로 가지고 `Observable`의 동작은 구독마다 독립적으로 실행된다. 
 
 - 각 구독자는 보통 자신만의 독립적인 요소 시퀀스를 생성합니다.
 - 연산자는 기본적으로 상태를 가지지 않는 형태 입니다.

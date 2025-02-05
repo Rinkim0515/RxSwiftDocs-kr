@@ -5,8 +5,8 @@
 
 <br/>
 
-다음은 interval 연산자를 사용한 예제입니다.
-```
+> 다음은 interval 연산자를 사용한 예제입니다.
+```swift
 let scheduler = SerialDispatchQueueScheduler(qos: .default)
 let subscription = Observable<Int>.interval(.milliseconds(300), scheduler: scheduler)
     .subscribe { event in
@@ -70,6 +70,8 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
 ```
 
 <br/>
+<br/>
+
 
 > 다른 메커니즘
 - **Lifecycle 기반 처리**: 예를 들어 Combine이나 RxCocoa의 바인딩 작업은 bind를 사용하면 생명 주기에 따라 자동으로 해제됩니다.
@@ -84,7 +86,7 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
 스케줄러에 대해 더 알고 싶다면 [여기](%EB%A7%81%ED%81%AC)를 참조하세요. (추후 작성 )
 
 
----
+<br/>
 
 
 두 개의 프로세스가 병렬로 실행되고 있다고 할때
@@ -98,7 +100,7 @@ RxSwift에서는 **병렬 실행**이 가능하므로 요소 생성(Producer)과
 - 이때 두 작업이 서로 다른 **스케줄러**에서 실행되면, 작업의 순서를 보장할 수 없기 때문에 dispose 이후에 무언가 출력될 가능성은 없습니다.
 - 스케줄러의 특성에 따라 작업이 언제 실행될지 달라지기 때문입니다.
 
-```
+```swift
 let subscription = Observable<Int>.interval(.milliseconds(300), scheduler: scheduler)
             .observe(on: MainScheduler.instance)
             .subscribe { event in
@@ -115,7 +117,7 @@ dispose 호출이 반환된 이후에는 아무것도 출력되지 않습니다.
 
 <br/>
 
-```
+```swift
 let subscription = Observable<Int>.interval(.milliseconds(300), scheduler: scheduler)
             .observe(on: MainScheduler.instance)
             .subscribe { event in
@@ -140,7 +142,7 @@ subscription.dispose() // executing on same `serialScheduler`
 
 disposeBag은 RxSwift 에서 ARC와 유사한 동작을 제공하기위해 사용됩니다.
 
-disposeBag이 **해제(deallocate)**될 때, 그 안에 추가된 모든 **Disposable**에 대해 자동으로 dispose를 호출합니다.
+disposeBag이 **해제(deallocate)** 될 때, 그 안에 추가된 모든 **Disposable**에 대해 자동으로 dispose를 호출합니다.
 
 DisposeBag 자체에는 dispose 메서드가 없으며, 명시적으로 dispose를 호출할 수 없도록 설계되었습니다.
 
@@ -174,7 +176,7 @@ DisposeBag은 일반적으로 VC의 라이프 사이클에 따라 자동으로 D
 4. 코드 간결성: DisposeBag = DisposeBag()으로 기존 Disposable을 정리하는로직을 간단히 구현
 
 
-```
+```swift
 var disposeBag = DisposeBag()
 
 Observable.from([1, 2, 3])
@@ -186,15 +188,15 @@ disposeBag = DisposeBag()  // 기존 Disposable들이 해제됨
 ```
 
 
-명시적으로 리소스를 정리해야 할 경우, CompositeDisposable을 사용하세요. 
+명시적으로 리소스를 정리해야 할 경우, CompositeDisposable을 사용하세요.   
 CompositeDisposable은 dispose **메서드를 호출하면 즉시 Disposable을 해제**합니다.
 dispose가 호출된 이후에 추가된 Disposable도 **즉시 해제**됩니다.
 
 ## Take until
 
-takeUntil 연산자는 **Observable의 수명을 특정 이벤트나 조건과 연동**하여, 조건이 만족되면 구독을 자동으로 해제합니다.
+> takeUntil 연산자는 **Observable의 수명을 특정 이벤트나 조건과 연동**하여, 조건이 만족되면 구독을 자동으로 해제합니다.
 
-```
+```swift
 sequence
     .take(until: self.rx.deallocated)
     .subscribe {

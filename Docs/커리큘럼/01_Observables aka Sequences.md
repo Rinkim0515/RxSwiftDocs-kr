@@ -2,7 +2,7 @@
 
 ## Basics
 The [equivalence](MathBehindRx.md) of observer pattern (`Observable<Element>` sequence) and normal sequences (`Sequence`) is the most important thing to understand about Rx.
-<br/> <br/>
+
 - 시퀀스가 일반적인 Sequence (예: 배열 등)와 어떻게 유사한지를 이해하는 것이  매우 중요합니다.
 <br/>
 
@@ -10,54 +10,42 @@ $\it{\large{\color{#5ad7b7}RxSwift에서 Observable <Element> 모든\ Observable
 
 <br/>
 
-- Observable과 Swift의 시퀀스간의 주요 장점은 Observable이 비동기적으로 요소를 받을 수 있다는 것입니다.  
-- 이것이 RxSwift의 핵심이며, 여기서부터는 이 아이디어를 확장하는 방법에 대한 문서입니다.”
+> Observable과 Swift의 시퀀스간의 주요 장점은 Observable이 비동기적으로 요소를 받을 수 있다는 것입니다.  
+> 이것이 RxSwift의 핵심이며, 여기서부터는 이 아이디어를 확장하는 방법에 대한 문서입니다.”
 
 
-<br/> 
  
  - “Observable(ObservableType)는 Sequence와 동등하다.”
  - “ObservableType의 subscribe 메서드는 Sequence의 makeIterator 메서드와 동등하다.”
  - “Observer(콜백)는 ObservableType의 subscribe 메서드에 전달되어 시퀀스 요소를 받기 위해 필요하다. 반환된 반복자에서 next()를 호출하는 대신에.”
 
 
-<br/>
 
 "시퀀스는 단순하고 익숙한 개념으로 쉽게 시각화할 수 있습니다. 사람들은 시각적 피질이 매우 큰 생물입니다. 개념을 쉽게 시각화할 수 있을 때, 이를 이해하는 것이 훨씬 쉬워집니다. (마블 다이어그램)
 
-<br/> 
+
+<br/>
+<br/>
+<br/>
 
 우리는 모든 Rx 연산자에서 이벤트 상태 머신을 시뮬레이션하려는 인지적 부담을 덜어낼 수 있으며, 시퀀스를 사용하여 고수준의 연산을 수행할 수 있습니다.”(복잡한 이벤트 상태를 일일히 추적하지 않아도 된다)
 
+
+
+- 보통 observable은 어떤 event 를 emit 하고 나서  onNext,onCompleted,onError로 상태를 추적해서 관리하는것은  개발자가 그것에대한 대응을 직접 핸들링 해야되는 resourceCost가 들지만   **(상태의 명시적인 호출과, 상태를 계속 추적하며 그에따라 필요한 동작을 일일히 작성해야하는 resource cost )**
+
+- 그와 반대로  operator를 사용하게될경우 일일히 상태 관리와 흐름이 자동으로 이뤄지기에 이벤트의상태의 하나하나를 신경쓰지 않아도 된다.
+- *즉 새로운데이터가 오는경우 onNext로,오류가 발생할시 onError로, 완료될시 onCompleted로 자동 상태 전이를 한다고 이해*
+
+
+ 즉 opeartor를 사용하지 않고 직접 방출을 관리하게 되는 경우에는
+-  데이터를 방출하는 시점마다  `onNext`, `onError`, `onCompleted` 상태를 직접 호출하여 방출해야하는것이고  상태가 변화할 때마다 그에 맞는 처리를 일일이 각 단계에서 직접 제어해야 한다.
+
+**허나 연산자를 사용하게 될경우**
+-  중간단계에서 상태관리를 자동화 할수 있어서 각 연산자가 자동으로 데이터를 전달하고 오류, 완료 상태를 다음 연산자로 넘기기 때문에,  매번 방출을 직접 관리할 필요가 없고 최종 subscribe에서만 최종 데이터와 상태(onNext, onError, onCompleted)를 구독하여 한 번만 처리해주면 된다는게 이말의 요지이다.
+
 <br/>
-
->[!NOTE]
-> 보통 observable은 어떤 event 를 emit 하고 나서  
->  onNext,onCompleted,onError로 상태를 추적해서 관리하는것은  
->
-> 개발자가 그것에대한 대응을 직접 핸들링 해야되는 resourceCost가 들지만  
-> *(상태의 명시적인 호출과, 상태를 계속 추적하며 그에따라 필요한 동작을 일일히 작성해야하는 resource cost )*  
->
-> 그와 반대로  operator를 사용하게될경우 일일히 상태 관리와 흐름이 자동으로 이뤄지기에 이벤트의상태의 하나하나를 신경쓰지 않아도 된다.
->
-> *즉 새로운데이터가 오는경우 onNext로,오류가 발생할시 onError로, 완료될시 onCompleted로 자동 상태 전이를 한다고 이해*
-
 <br/>
-
-$\it{\large{\color{#5ad7b7}결론이 무엇이냐? }}$
-
- <br/>
-
->[!NOTE] 
-> 즉 opeartor를 사용하지 않고 직접 방출을 관리하게 되는 경우에는
->
-> 데이터를 방출하는 시점마다  `onNext`, `onError`, `onCompleted` 상태를 직접 호출하여 방출해야하는것이고  상태가 변화할 때마다 그에 맞는 처리를 일일이 각 단계에서 직접 제어해야 한다.
->
-> **허나 연산자를 사용하게 될경우**
->
-> 중간단계에서 상태관리를 자동화 할수 있어서 각 연산자가 자동으로 데이터를 전달하고 오류, 완료 상태를 다음 연산자로 넘기기 때문에,  
-> 매번 방출을 직접 관리할 필요가 없고 최종 subscribe에서만 최종 데이터와 상태(onNext, onError, onCompleted)를 구독하여 한 번만 처리해주면 된다는게 이말의 요지이다.
-
 <br/>
 
 만약 우리가 Rx를 사용하지 않고 비동기 시스템을 모델링한다면, 그것은 아마도 우리의 코드가 추상화하는 대신 시뮬레이션해야 하는 상태 기계와 일시적인 상태로 가득 차 있다는 것을 의미할 것이다.
@@ -106,7 +94,7 @@ Rx를 사용하지 않은 비동기시스템을 구현하게 될경우에 상태
 
 2. **(error | completed)?**
 
-- | 는 **“또는”을 의미합니다.  
+- | 는 “또는”을 의미합니다.  
 - error는 onError **이벤트**로, 시퀀스가 에러로 종료되었음을 나타냅니다.  
 - completed는 onCompleted **이벤트**로, 시퀀스가 정상적으로 완료되었음을 나타냅니다.  
 - ?는 **0회 또는 1회만 발생**할 수 있음을 의미합니다.  
@@ -119,16 +107,19 @@ Rx를 사용하지 않은 비동기시스템을 구현하게 될경우에 상태
 - onError**나** onCompleted **이벤트가 발생하면 시퀀스가 종료**됨을 나타냅니다.  
 - 종료 이벤트가 발생한 후에는 더 이상 **다른 이벤트(onNext 포함)**를 방출할 수 없습니다.
 
+<br/>
+<br/>
 
-> [!NOTE]
-> **4가지의 Case**
-> 
-> **1. 요소 없이 완료되는 시퀀스**  
-> **2. 요소를 방출한 후 완료되는 시퀀스**  
-> **3. 요소를 방출하다가 에러로 종료되는 시퀀스**  
-> **4.요소 없이 에러로 종료되는 시퀀스**  
+ **시퀀스의 4가지의 Case**
+ 1. 요소 없이 완료되는 시퀀스
+ 2. 요소를 방출한 후 완료되는 시퀀스
+ 3. 요소를 방출하다가 에러로 종료되는 시퀀스
+ 4. 요소 없이 에러로 종료되는 시퀀스
 
-```swift+
+<br/>
+<br/>
+
+```swift
 enum Event<Element>  {
     case next(Element)      // next element of a sequence
     case error(Swift.Error) // sequence failed with error

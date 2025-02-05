@@ -1,4 +1,4 @@
-# 암묵적인 Observable 보장
+# 암묵적인 Observable 보장(Implict Observable guarantees)
 
 모든 시퀀스 생성자(Observable)는 반드시 준수해야 하는 몇 가지 추가적인 보장이 있습니다.
 
@@ -8,7 +8,7 @@
 
 간단히 말해, 다음 예제를 고려해 보십시오:
 
-```
+```swift
 someObservable
   .subscribe { (e: Event<Element>) in
       print("Event processing started")

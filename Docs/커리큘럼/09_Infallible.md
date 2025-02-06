@@ -1,9 +1,9 @@
 # 실패하거나 오류를 발생시키지 않는것
 
-- Infallible은 Observable의 또 다른 유형 으로, Observable과 동일하지만 절대 실패하지 않으며, 에러를 방출할수 없습니다.
-- 즉,Infallible.create 또는 "Creating Your first Observable"에서 언급된 생성방법을 사용하여 Infallible을 만들때 , 에러를 방출하는것이 허용되지 않는다는 뜻입니다.
+- `Infallible`은 `Observable`의 또 다른 유형 으로, `Observable`과 동일하지만 절대 실패하지 않으며, 에러를 방출할수 없습니다.
+- 즉,`Infallible.create` 또는 `"Creating Your first Observable"` 에서 언급된 생성방법을 사용하여 `Infallible`을 만들때 , 에러를 방출하는것이 허용되지 않는다는 뜻입니다.
 
-  Infallible의 주요 특징
+  `Infallible`의 주요 특징
   
 	1. 에러방출 불가능: onNext와 onCompleted만 방출
 	2. 에러 안전성 보장: 에러가 발생하지 않기에 단순한 처리가 가능
@@ -13,7 +13,7 @@
 
 
 
-사용예제 ) UI event
+> 사용예제 ) `UI event`
 ```
 let buttonTap = Infallible<String>.create {
 	observer(.next("Button Tapped!"))
@@ -25,7 +25,11 @@ buttonTap
 	.subscribe(.onNext: { print($0) })
 
 ```
-observable vs Infallible 
+
+</br>
+</br>
+
+`observable` vs `Infallible` 
 | 특징       | Observable                          | Infallible                          |
 | -------- | ----------------------------------- | ----------------------------------- |
 | 에러방출     | 가능                                  | 불가능                                 |
@@ -39,9 +43,9 @@ observable vs Infallible
 
 
 > [!NOTE]
-> Infallible은 에러를 방출하지 않는 데이터 스트림을 보장함
-> Driver와 Signal은 기본적으로 MainScheduler를 사용하여 데이터를 방출하지만 Inallible은 Scheduler에 구애받지 않는 다는것이 큰 차이점
->  또한 Driver와 Signal은 기본적으로 share() 통해서 구독을 공유하여 리소스와 부작용을 방지 하지만 Infallible은 share()없이 각 구독이  독립적으로 동작할수 있음 
+> `Infallible`은 에러를 방출하지 않는 데이터 스트림을 보장함  
+> `Driver`와 `Signal`은 기본적으로 `MainScheduler`를 사용하여 데이터를 방출하지만 `Inallible`은 `Scheduler`에 구애받지 않는 다는것이 큰 차이점
+>  또한 `Driver`와 `Signal`은 기본적으로 `share()` 통해서 구독을 공유하여 리소스와 부작용을 방지 하지만 `Infallible`은 `share()`없이 각 구독이  독립적으로 동작할수 있음 
 
 
 | 특징            | Driver              | Signal            | Infallible               |
@@ -52,7 +56,9 @@ observable vs Infallible
 | 주요 사용 사례      | UI 데이터 스트림 (텍스트 입력) | 사용자 이벤트 ( 버튼 클릭 ) | 설정값 , 로컬 캐시 데이터등 독립적 스트림 |
 
 
----
+</br>
+</br>
+</br>
 
 ### 종종 발생할수 있는 일
 
@@ -61,7 +67,7 @@ observable vs Infallible
 - 다만 이방법은 자주 사용해서는 안되며, 코드냄새가 나는 나쁜 방식으로 간주됩니다. 하지만 가능은 합니다.
 
 
-```
+```swift
 let magicBeing: Observable<MagicBeing> = summonFromMiddleEarth()
 
 magicBeings
@@ -92,7 +98,7 @@ kitten
 	})
 	.dispose(by: disposeBag)
 ```
-그러니 이런방식은 피하는것이 좋습니다.
+> 그러니 이런방식은 피하는것이 좋습니다.
 
 
 > [!NOTE]
@@ -105,7 +111,8 @@ kitten
 >  
 > 즉 Rx Monad를 탈출한다는 위와 같은 내용처럼 처리 하지 않고 체인의 밖에서 직접 명령형 방식으로 처리하거나 ,상태를 변경하는것으로 볼수있다.
 
----
+</br>
+</br>
 
 ## 명령형 코드 vs 선언형 코드
 
@@ -116,7 +123,7 @@ kitten
 - 상태변경과 작업과정을 명시적으로 작성
 
 > 예시
-```
+```swift
 button.backgroundColor = .blue //버튼의 ! 배경색은 ! 파랑
 label.text = "Hello" // label의 text는 문자열 "Hello"
 ```
@@ -126,14 +133,14 @@ label.text = "Hello" // label의 text는 문자열 "Hello"
 - 데이터를 설명적으로 정의 하고 , 상태 변화는 내부적으로 처리.
 
 > 예시
-```
+```swift
 textObservable
 	.bind(to: label.rx.text)
 	.disposed(by: disposeBag)
 ```
 
 > 명령형 코드의 예시
-```
+```swift
 class ViewController: UIViewController {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var button: UIButton!
@@ -152,7 +159,7 @@ class ViewController: UIViewController {
 ```
 
 > 선언형 코드 예시
-```
+```swift
 class ViewController: UIViewController {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var button: UIButton!
@@ -169,6 +176,11 @@ class ViewController: UIViewController {
     }
 }
 ```
+
+</br>
+</br>
+
+
 한발 더나아가서 생각을 해본다면,,,?
 
 UIKit은 기본적으로 명령형 프로그래밍 방식으로 설계되었다?

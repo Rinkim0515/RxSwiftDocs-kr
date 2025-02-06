@@ -1,19 +1,19 @@
-# 구독(Subscription) 공유와 share 연산자
+# 구독(Subscription) 공유와 share 연산자(Sharing Subscription and the share Operator)
 만약 여러 Observer가 하나의 구독에서 생성된이벤트(요소) 를 공유하도록 만들고 싶다면 어떻게 해야할까요? 
 
 이를 위해선 두가지를 정의 해야 합니다.
 
 **1. 과거 이벤트를 처리하는 방식**
-- 새로운 Subscriber가 구독하기 전에 생성된 이벤트를 어떻게 다룰지 결정해야합니다.
+- 새로운 `Subscriber`가 구독하기 전에 생성된 이벤트를 어떻게 다룰지 결정해야합니다.
 - eg) 가장최근의 이벤트만 재생 (repaly), 모든 이벤트 재생, 최근 n개의 이벤트 재생.
   
 **2. 공유된 구독을 시작하는 시점**
 - 언제 구독을 시작하고 종료할지 결정해야합니다.
--	eg) refCount(구독자가 처음생기면서 시작, 마지막 구독자가 해지되면 중단)할것인지 수동으로 할것인지 또는 사용자 알고리즘으로 할것인지
+-	eg) `refCount`(구독자가 처음생기면서 시작, 마지막 구독자가 해지되면 중단)할것인지 수동으로 할것인지 또는 사용자 알고리즘으로 할것인지
 
 일반적으로 가장 많이 사용되는 선택지는 replay(1).refCount()의 조합, 즉 share(replay: 1)입니다.
 
-```
+```swift
 let counter = myInterval(.milliseconds(100))
 	.share(replay: 1)
 
@@ -38,7 +38,7 @@ subscription2.dispose()
 
 print("Ended ----")
 ```
-이것은 이렇게 출력될것입니다.
+> 이것은 이렇게 출력될것입니다.
 ```
 Started ----
 Subscribed
@@ -90,11 +90,13 @@ Ended ----
 
 
 여기서 Subscribed**와** Disposed **이벤트가 각각 한 번씩만 발생**하는 점에 주목하세요.
-
+</br>
+</br>
+</br>
 URL observable의 동작은 이와 동일합니다.  
 HTTP 요청은 Rx에서 이렇게 래핑 됩니다. 이는 interval 연산자와 매우 비슷한 패턴으로 작동됩니다.
 
-```
+```swift
 extension Reactive where Base: URLSession {
 	public func response(request: URLRequest) -> 
 	Obsevable<(response:HTTPURLResponse, data: Data)> {
@@ -146,9 +148,11 @@ extension Reactive where Base: URLSession {
 | task.resume()                             | 네트워크 요청을 시작.                                  |
 | Disposables.create { task.cancel() }      | 구독 취소 시 네트워크 요청을 중단하여 리소스 해제.                 |
 
+</br>
+</br>
 
-사용예시
-```
+> 사용예시
+```swift
 let url = URL(string:"https://api.example.com/data")!
 
 let request = URLRequest(url: url)

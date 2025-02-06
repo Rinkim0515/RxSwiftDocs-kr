@@ -1,6 +1,6 @@
 # RxDataSources
 
-이것은 UITableView와 UICollectionView를 위한 완전한 기능의 반응형 데이터소스를 구현한 클래스 집합니다.
+이것은 `UITableView`와 `UICollectionView`를 위한 완전한 기능의 반응형 데이터소스를 구현한 클래스 집합니다.
 
 RxDataSource are bundled [here.](https://github.com/RxSwiftCommunity/RxDataSources)  
 여기에 함께 포함되어있습니다.
@@ -8,10 +8,10 @@ RxDataSource are bundled [here.](https://github.com/RxSwiftCommunity/RxDataSourc
 Fully functional demonstration how to use them is included in the [RxExample](https://github.com/ReactiveX/RxSwift/tree/main/RxExample) project.  
 .RxExample 프로젝트에는 이를 사용하는 완전한 데모가 포함되어 있습니다.
 
-일반적인 데이터소스 (delegate, dataSource패턴)를 사용하는 대신 ,Observable 스트림을 통해 UI와 데이터를 자동으로 연결합니다.
+일반적인 데이터소스 (`delegate`, `dataSource패턴`)를 사용하는 대신 ,`Observable` 스트림을 통해 UI와 데이터를 자동으로 연결합니다.
 
 특징으로는  
-데이터 변화에 따라  tableView와 collectionView에 자동으로 업데이트 됨 
+데이터 변화에 따라  `tableView`와 `collectionView`에 자동으로 업데이트 됨 
 섹션 단위의 데이터 관리가 용이함 .
 
 > 사용예제
@@ -99,7 +99,7 @@ class ViewController: UIViewController {
             .map { self.updatedSections }
             .bind(to: dataSubject)
             .disposed(by: disposeBag)
-	    }
+	    } 
 	}
 }
 ```

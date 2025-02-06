@@ -4,12 +4,15 @@ obserbable을 UIkit 컨트롤에 바인딩 할떼, UI레이어에서 지켜야 �
 
 ## 쓰레드 처리
 
-Observable은 반드시 MainScheduler에서 값을 전달해야합니다.
-- 이는 UIKit/Cocoa의 일반적인 요구사항입니다.
+Observable은 반드시 `MainScheduler`에서 값을 전달해야합니다.
+- 이는 UIKit/Cocoa의 일반적인 요구사항입니다.  
 API가 MainScheduler에서  결과를 반환하도록 만드는것이 좋습니다.
 백그라운드 스레드에서 UI바인딩을 시도하면, 디버그 빌드에서 RxCocoa가 예외를 발생시켜 경고합니다.
 이를 해결하려면 observe.on(MainScheduler.instance) 를 추가해야합니다.
 URLSession 확장은 기본적으로 MainScheduler에 결과를 반환하지 않습니다.
+
+</br>
+</br>
 
 > RxSwift에서 UI 쓰레드로 전환하는 방법
 ```swift
@@ -27,7 +30,10 @@ URLSession.shared.rx.data(request: urlRequest)
 	.disposed(by: disposeBag)
 ```
 
----
+</br>
+</br>
+
+
 
 ## 에러 처리
 
@@ -44,6 +50,9 @@ URLSession.shared.rx.data(request: urlRequest)
 > UI와 연결될때에는 에러를 반영할수 없기때문에 ( crash 혹은 예기치 못한 동작)  
 > 애러처리가 필수임 여기서 얘기하는것은 에러 발생시에 기본값 반환을 통해서 처리할수도 있고  
 > retry연산자를 사용하는것을 얘기하는듯 
+
+</br>
+</br>
 
 ## 구독 공유
 
@@ -72,6 +81,9 @@ UILayer에서는 변환 체인의 마지막에 share를 추가하는것이 좋�
 
 또한 Driver단위를 참고하세요.
 Driver는 share호출을 자동으로 감싸고, 데이터가 항상 메인 UI스레드에서 관찰되도록 보장하며, 에러가 UI에 바인딩 되지 않도록 설계되었습니다.
+
+</br>
+</br>
 
 
 > [!NOTE]

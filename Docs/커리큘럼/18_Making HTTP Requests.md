@@ -1,14 +1,16 @@
 # HTTP 요청 만들기
 
 HTTP 요청은 개발자가 가장 먼저 시도하는 작업중 하나입니다.  
-URLRequest 객체를 만들어 요청 유형(GET, POST), 요청본문, 요청 쿼리파라미터 등을 정의해야합니다.
+`URLRequest` 객체를 만들어 요청 유형(GET, POST), 요청본문, 요청 쿼리파라미터 등을 정의해야합니다.
+
+</br>
 
 > 간단한 GET 요청예시
 ```swift
 let req = URLRequest(url: URL(string: "http://en.wikipedia.org/w/api.php?action=parse&page=Pizza&format=json"))
 ```
 
-옵저버블(Observable)을 다른 옵저버블과 연결하거나 조합(composition)하지 않고 **단독으로 요청을 실행**하고 싶을 때, 이렇게 하면 됩니다.
+> 옵저버블(Observable)을 다른 옵저버블과 연결하거나 조합(composition)하지 않고 **단독으로 요청을 실행**하고 싶을 때, 이렇게 하면 됩니다.
 
 ```swift
 let responseJSON = URLSession.shared.rx.json(request: req)
@@ -48,6 +50,11 @@ URLSession.shared.rx.response(request: myURLRequest)
         print(event)  // 에러가 발생해도 출력됨
     }
 ```
+
+</br>
+</br>
+
+
 
 ## HTTP 트래핑 로깅
 

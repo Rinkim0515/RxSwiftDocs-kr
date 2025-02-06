@@ -1,4 +1,4 @@
-# 메모리누수 디버깅
+# 메모리누수 디버깅(Debugging memory leaks)
 - 디버깅 모드에서는 RxSwift가 할당된 모든 리소스를 전역변수 Resource.total에서 추적합니다.
 - 리소스 누수 탐지 로직을 구현하려면, 주기적으로 RxSwift.Resource.total 값을 출력하는 방법이 제일 안전합니다.
 
@@ -10,6 +10,10 @@ _ = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
         print("Resource count \(RxSwift.Resources.total)")
     })
 ```
+
+</br>
+</br>
+
 메모리 누수를 테스트하는 가장 효율적인 방법은:
 
 1. 화면으로 이동하고 사용합니다.
@@ -22,17 +26,23 @@ _ = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
 - 초기와 최종 리소스 개수가 다르다면, **메모리 누수(memory leak)** 가 발생했을 가능성이 있습니다.
 - 두 번의 화면 전환을 권장하는 이유는, 첫 번째 전환에서 **지연 로딩(lazy loading)** 리소스가 로드되기 때문입니다.
 
+</br>
+</br>
+
 > [!NOTE]
 > RxSwift는 메모리 관리가 중요함  
 > Observable체인의 구독이나 리소스 해제가 제대로 이루어지지 않으면 메모리 누수가 발생할수 있음
 > 그래서 Resource.total을 활용하여서 현재 RxSwift에서 활성상태인 리소스 개수를 확인하고 누수를 탐지할수 잇음
 
-화면전환 테스트 외에도 매초마다 현재리소스 개수를 출력하는 방법도 있음 
+</br>
+</br>
+
+> 화면전환 테스트 외에도 매초마다 현재리소스 개수를 출력하는 방법도 있음 
 ```swift
 _ = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
     .subscribe(onNext: { _ in
         print("Resource count \(RxSwift.Resources.total)")
     })
 ```
-이런식으로 매초마다 현재 리소스 개수를 출력하여 확인하는 방법도 있음 
+>이런식으로 매초마다 현재 리소스 개수를 출력하여 확인하는 방법도 있음 
 

@@ -1,4 +1,4 @@
-# 사용자정의 연산자(Custom Operator)
+# Custom Operator
 
 사용자 정의 연산자를 구현하는 방법은 두가지가 있습니다.
 

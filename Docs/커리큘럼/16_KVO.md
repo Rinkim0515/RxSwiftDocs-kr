@@ -1,6 +1,4 @@
-# KVO
-
-## Key-Value Observing
+# KVO (Key-Value Observing)
 
 KVO는 Objective-C 기반의 객체속성 변화를 감지하는 기능입니다. 하지만 타입안전성이 부족하고 메모리 관리가 복잡하다는 단점이 있습니다. 
 

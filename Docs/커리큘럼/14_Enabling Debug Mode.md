@@ -1,4 +1,4 @@
-# 디버그 모드의 활성화 (Enabling Debug Mode)
+# Enabling Debug Mode
 
 - RxSwift의 RxSwift.Resource 를 사용해 메모리 누수 디버깅을 하거나 HTTP 요청을 자동으로 로깅하려면 디버그 모드를 활성화 해야합니다.
 

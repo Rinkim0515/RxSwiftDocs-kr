@@ -1,4 +1,4 @@
-# Observable 생성의 핵심개념(Creating your first Observable)
+# Creating your first Observable
 
 observable에 대해서 알아야할 중요한점이 하나 있습니다.
 

@@ -1,4 +1,4 @@
-# HTTP 요청 만들기
+# Making HTTP Requests
 
 HTTP 요청은 개발자가 가장 먼저 시도하는 작업중 하나입니다.  
 `URLRequest` 객체를 만들어 요청 유형(GET, POST), 요청본문, 요청 쿼리파라미터 등을 정의해야합니다.

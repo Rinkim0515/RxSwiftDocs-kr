@@ -1,4 +1,4 @@
-# 실패하거나 오류를 발생시키지 않는것
+# Infailible
 
 - `Infallible`은 `Observable`의 또 다른 유형 으로, `Observable`과 동일하지만 절대 실패하지 않으며, 에러를 방출할수 없습니다.
 - 즉,`Infallible.create` 또는 `"Creating Your first Observable"` 에서 언급된 생성방법을 사용하여 `Infallible`을 만들때 , 에러를 방출하는것이 허용되지 않는다는 뜻입니다.

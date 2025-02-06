@@ -1,4 +1,4 @@
-# 암묵적인 Observable 보장(Implict Observable guarantees)
+# Implict Observable guarantees
 
 모든 시퀀스 생성자(Observable)는 반드시 준수해야 하는 몇 가지 추가적인 보장이 있습니다.
 
@@ -6,7 +6,7 @@
 
 또한, .next 이벤트가 완료되지 않은 상태에서는 .completed 또는 .error와 같은 종료 이벤트를 보낼 수 없습니다.
 
-간단히 말해, 다음 예제를 고려해 보십시오:
+> 간단히 말해, 다음 예제를 고려해 볼까요:
 
 ```swift
 someObservable
@@ -17,7 +17,7 @@ someObservable
   }
 ```
 
-이는 이렇게 출력될것 입니다.
+> 이는 이렇게 출력될것 입니다.
 ```
 Event processing started
 
@@ -32,7 +32,7 @@ Event processing started
 Event processing ended
 ```
 
-그리고 이렇게 출력될일 은 없을것 입니다.
+> 그리고 이렇게 출력될일 은 없을것 입니다.
 ```
 Event processing started
 Event processing started

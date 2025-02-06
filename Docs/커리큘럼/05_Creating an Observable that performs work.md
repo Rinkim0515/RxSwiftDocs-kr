@@ -1,4 +1,4 @@
-# 작업을 수행하는 Observable을 생성하기(Creating an Observable that performs work)
+# Creating an Observable that performs work
 
 > 이제 조금더 흥미로운 작업을 해보겠습니다. 이전 예제에서 사용된 interval 연산자를 직접 구현해보겠습니다.
 

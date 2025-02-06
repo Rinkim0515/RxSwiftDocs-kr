@@ -7,14 +7,12 @@ $\it{\large{\color{#5ad7b7}“이\ 번역본은\ RxSwift\ 원문을\ 기반으�
  <br/>
 
 ---
-## 참고하기 좋은 링크 
-//test
-> 공식문서 링크: [바로가기](https://github.com/ReactiveX/RxSwift/blob/main/Documentation/GettingStarted.md) 
+## [공식문서](https://github.com/ReactiveX/RxSwift/blob/main/Documentation/GettingStarted.md)  
 
 
 
----
-## 작성하게된 계기 
+
+## 개요
 
 Swift를 학습함에 있어서 반응형 프로그래밍은 언젠간 넘어야할 산같은 존재라고 생각합니다.   
 
@@ -27,13 +25,7 @@ Swift를 학습함에 있어서 반응형 프로그래밍은 언젠간 넘어야
 
 
 --- 
-## 작성완성 방법
 
-> 일단 영어원문을 번역해달라고 chatGPT 를 이용해서 번역을 돌리고 난후 부족한 설명이나 이해가 안가는 부분에대해서 찾아보고 정리하는 식으로 작성하였습니다. 
-
-> 학습방식은 초반에는 복붙 을 이용해서 필요한 내용만 요약하는 형식으로 가져갔는데 다시 봐야하는 케이스가 빈번헤졌습니다( 집중도 이슈)
-
-> 블로그에서 영문번역과 함께 확인하실수 있습니다. 
 
 
 ## Getting Started

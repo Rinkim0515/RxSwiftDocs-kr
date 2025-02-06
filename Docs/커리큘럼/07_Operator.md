@@ -1,4 +1,4 @@
-# 연산자(Custom Operator)
+# Operator
 
 - RxSwift에는 수많은 연산자가 구현되어 있습니다.
 - 모든 연산자의 Marble Diagram 은 Reactive.io 에서 확인할수 있습니다.

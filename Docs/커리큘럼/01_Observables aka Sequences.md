@@ -1,4 +1,4 @@
-# 시퀀스로 알려진 옵저버블
+# Observable aka Sequences
 
 ## Basics
 The [equivalence](MathBehindRx.md) of observer pattern (`Observable<Element>` sequence) and normal sequences (`Sequence`) is the most important thing to understand about Rx.

@@ -73,7 +73,7 @@ public protocol Collection<Element>: Sequence {}
 > | **[19.RxDataSources](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/%EC%BB%A4%EB%A6%AC%ED%81%98%EB%9F%BC/19_RxDataSource.md#rxdatasources)**                                                                     | **RxSwift와 함께 UITableView와 UICollectionView의 데이터 바인딩을 더 쉽게 처리할 수 있도록 도와주는 라이브러리** |
 > | **[20.Driver]()**                                                                                                                                                            | **드라이버:  UI 바인딩을 안전하게 처리하기 위한 특수한 Observable 타입, UI 관련 데이터 스트림을 다룰 때 메인 스레드에서 실행되며, 에러를 방출하지 않는 특징**|
 > | **[21.Traits: Driver, Single, Maybe, Completable](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/%EC%BB%A4%EB%A6%AC%ED%81%98%EB%9F%BC/Traits.md#traits)**                                                        | **Traits(트레잇)은 특정한 용도로 최적화된 Observable 타입, Observable을 더 예측 가능하고 안전하게 사용가능**|
-> | **[22.Examples]**                                                                                                                                                                                                          | **예시** |
+> | **[22.Examples](https://github.com/Rinkim0515/RxSwift2025/blob/main/Docs/%EC%BB%A4%EB%A6%AC%ED%81%98%EB%9F%BC/20_Examples.md#examples)**                                                                                                                                                                                                          | **예시** |
 
 ---
 ## 추가 기재 내용 

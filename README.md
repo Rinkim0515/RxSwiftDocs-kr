@@ -1,12 +1,8 @@
 # RxSwift 
 
-<br/>
 
-$\it{\large{\color{#5ad7b7}“이\ 번역본은\ RxSwift\ 원문을\ 기반으로\ 작성되었습니다."}}$ 
 
- <br/>
 
----
 ## [공식문서](https://github.com/ReactiveX/RxSwift/blob/main/Documentation/GettingStarted.md)  
 
 
